@@ -1,0 +1,16 @@
+:root {
+	--text-prim: rgba(0, 0, 0, 0.87);
+	--text-sec: rgba(255, 255, 255, 0.87);
+
+	--prim-color: #f4e041;
+	--hover-color: #ffe302;
+	--sec-color: #00bdd3;
+	--bg-color: #f8f8f8;
+	--disabled-color: #b4b4b4;
+
+	--fz-title: 40px;
+	--fz-text: 16px;
+
+	--ln-normal: 1.625;
+	--ln-title: 1;
+}

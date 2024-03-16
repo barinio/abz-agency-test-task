@@ -1,0 +1,17 @@
+@import-normalize;
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital@0;1&display=swap");
+@import "./variables.css";
+@import "./reset.css";
+
+body {
+	font-family: "Nunito", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	margin: 0;
+	height: 100vh;
+	color: var(--text-prim);
+}
