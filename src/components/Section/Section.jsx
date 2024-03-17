@@ -1,12 +1,12 @@
-import { Container } from './Section.styled';
+import { Container, SectionStyled, SectionTitle } from './Section.styled';
 
 export const Section = ({ title, children }) => {
   return (
-    <section className="section">
+    <SectionStyled className="section">
       <Container>
-        <h2>{title}</h2>
+        <SectionTitle>{title}</SectionTitle>
         <>{children}</>
       </Container>
-    </section>
+    </SectionStyled>
   );
 };

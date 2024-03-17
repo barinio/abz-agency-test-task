@@ -6,6 +6,8 @@
 body {
 	font-family: "Nunito", sans-serif;
 	font-weight: 400;
+	font-size: var(--fz-text);
+	line-height: var(--ln-text);
 	font-style: normal;
 
 	-webkit-font-smoothing: antialiased;
@@ -14,4 +16,7 @@ body {
 	margin: 0;
 	height: 100vh;
 	color: var(--text-prim);
+}
+main {
+	background-color: var(--bg-color);
 }
