@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -7,27 +9,33 @@ import {
   FormButtonWrapper,
   FormInput,
   FormInputWrapper,
+  FormStyled,
   InputHidden,
   LabelSpan,
   ListRadioLabel,
+  PhotoWrapper,
   PositionContainer,
   RadioLabel,
   TitlePositionContainer,
-  UploadButton,
+  UploadBox,
   UploadLabel,
 } from './PostRequest.styled';
-import { postitions } from './positions';
+
 import icons from '../../images/icons.svg';
+import { getPositions, getToken, postUser } from '../../api/api';
 
-const phoneRegExp = /^\+380\d{9}$/;
-// const phoneRegExp = /^\+38 \(\d{3}\) \d{3} - \d{2} - \d{2}$/;
-const emailRegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+const phoneRegExp = /^[+]{0,1}380([0-9]{9})$/;
+const emailRegExp =
+  // eslint-disable-next-line no-control-regex
+  /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/;
 
-const FormUser = () => {
+const MaxSise = 5242880;
+
+const FormUser = ({ fetchFirstPage, setIsShow }) => {
   const validationSchema = Yup.object({
-    userName: Yup.string()
+    name: Yup.string()
       .min(2, 'User name must be at least 2 characters')
-      .max(64, 'User name must be at most 64 characters')
+      .max(60, 'User name must be at most 64 characters')
       .required('User name is required'),
     email: Yup.string()
       .required('Email is required')
@@ -35,50 +43,92 @@ const FormUser = () => {
     phone: Yup.string()
       .required('Phone number is required')
       .matches(phoneRegExp, '+38 (XXX) XXX - XX - XX'),
-    position: Yup.string().required('Position is required'),
+    position_id: Yup.number().required('Position is required'),
     photo: Yup.mixed()
       .required('Photo is required')
-      .test('fileSize', 'File size is too large', value => {
-        return value && value.size <= 1048576;
+      .test(
+        'fileSize',
+        'The photo size must not be greater than 5 Mb',
+        value => {
+          return value && value.size <= MaxSise;
+        }
+      )
+      .test('fileType', 'The photo format must be jpeg/jpg type', value => {
+        return value && ['image/jpeg', 'image/jpg'].includes(value.type);
+      })
+      .test('fileDimensions', 'Minimum size of photo 70x70px', async value => {
+        if (!value) return false;
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = URL.createObjectURL(value);
+          img.onload = () => {
+            URL.revokeObjectURL(img.src);
+            resolve(img.width >= 70 && img.height >= 70);
+          };
+          img.onerror = reject;
+        });
       }),
   });
 
   const formik = useFormik({
     initialValues: {
-      userName: '',
+      name: '',
       email: '',
       phone: '',
-      position: '',
+      position_id: 1,
       photo: '',
     },
     validationSchema,
-    onSubmit: values => {
-      console.log(values);
+    onSubmit: async values => {
+      try {
+        const newUser = await postUser(values);
+        newUser && fetchFirstPage();
+        setIsShow(true);
+      } catch (error) {
+        console.log('error:', error);
+      } finally {
+        formik.resetForm();
+      }
     },
   });
 
+  const [positions, setPositions] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const { positions } = await getPositions();
+      setPositions(positions);
+    };
+    fetchData();
+    getToken();
+  }, []);
+
   return (
     <>
-      <form onSubmit={formik.handleSubmit}>
-        {/* <FormWrapper> */}
+      <FormStyled onSubmit={formik.handleSubmit}>
         <ContainerUserInfo>
           <FormInputWrapper>
             <FormInput
               type="text"
-              name="userName"
+              name="name"
               placeholder="Name"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.userName}
+              value={formik.values.name}
+              minLength={2}
+              maxLength={60}
               style={{
                 color:
-                  formik.touched.userName && formik.errors.userName
-                    ? 'red'
+                  formik.touched.name && formik.errors.name
+                    ? 'var(--error-color)'
                     : '#7E7E7E',
+                border:
+                  formik.touched.name && formik.errors.name
+                    ? '1px solid var(--error-color)'
+                    : '1px solid #d0cfcf',
               }}
             />
-            {formik.touched.userName && formik.errors.userName ? (
-              <ErrorMessage>{formik.errors.userName}</ErrorMessage>
+            {formik.touched.name && formik.errors.name ? (
+              <ErrorMessage>{formik.errors.name}</ErrorMessage>
             ) : null}
           </FormInputWrapper>
           <FormInputWrapper>
@@ -89,11 +139,17 @@ const FormUser = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
+              minLength={2}
+              maxLength={100}
               style={{
                 color:
                   formik.touched.email && formik.errors.email
-                    ? 'red'
+                    ? 'var(--error-color)'
                     : '#7E7E7E',
+                border:
+                  formik.touched.email && formik.errors.email
+                    ? '1px solid var(--error-color)'
+                    : '1px solid #d0cfcf',
               }}
             />
             {formik.touched.email && formik.errors.email ? (
@@ -111,14 +167,20 @@ const FormUser = () => {
               style={{
                 color:
                   formik.touched.phone && formik.errors.phone
-                    ? 'red'
+                    ? 'var(--error-color)'
                     : '#7E7E7E',
+                border:
+                  formik.touched.phone && formik.errors.phone
+                    ? '1px solid var(--error-color)'
+                    : '1px solid #d0cfcf',
               }}
             />
             {formik.touched.phone && formik.errors.phone ? (
               <ErrorMessage>{formik.errors.phone}</ErrorMessage>
             ) : (
-              <ErrorMessage>+38 (XXX) XXX - XX - XX</ErrorMessage>
+              <ErrorMessage style={{ color: '#7E7E7E' }}>
+                +38 (XXX) XXX - XX - XX
+              </ErrorMessage>
             )}
           </FormInputWrapper>
         </ContainerUserInfo>
@@ -126,60 +188,76 @@ const FormUser = () => {
         <PositionContainer>
           <TitlePositionContainer>Select your position</TitlePositionContainer>
           <ListRadioLabel>
-            {postitions.map(({ value }) => (
-              <RadioLabel key={value}>
+            {positions.map(({ name, id }) => (
+              <RadioLabel key={id}>
                 <InputHidden
                   type="radio"
-                  id={value}
-                  name="position"
-                  value={value}
-                  checked={formik.values.position === value}
-                  onChange={() => formik.setFieldValue('position', value)}
+                  id={id}
+                  name="position_id"
+                  value={name}
+                  checked={formik.values.position_id === id}
+                  onChange={() => formik.setFieldValue('position_id', id)}
                 />
-                <label htmlFor={value}>
+                <label htmlFor={id}>
                   <svg width="20" height="20">
                     <use href={icons + '#icon-checkbox'}></use>
                   </svg>
-                  {value}
+                  {name}
                 </label>
               </RadioLabel>
             ))}
-            {formik.touched.position && formik.errors.position ? (
-              <ErrorMessage>{formik.errors.position}</ErrorMessage>
+            {formik.touched.position_id && formik.errors.position_id ? (
+              <ErrorMessage>{formik.errors.position_id}</ErrorMessage>
             ) : null}
           </ListRadioLabel>
         </PositionContainer>
 
-        <div className="photo-upload-wrapper">
+        <PhotoWrapper className="photo-upload-wrapper">
           <UploadLabel htmlFor="photo">
-            <input
+            <InputHidden
               id="photo"
               name="photo"
               type="file"
               onChange={event => {
                 formik.setFieldValue('photo', event.currentTarget.files[0]);
               }}
-              accept="image/*"
-              style={{ display: 'none' }}
+              accept="image/jpeg,image/jpg"
             />
-            <UploadButton>Upload</UploadButton>
-            <LabelSpan>
-              {formik.values.photo !== ''
+            <UploadBox
+              style={{
+                border: formik.errors.photo
+                  ? '1px solid var(--error-color)'
+                  : '1px solid #d0cfcf',
+              }}
+            >
+              Upload
+            </UploadBox>
+            <LabelSpan
+              style={{
+                border: formik.errors.photo
+                  ? '1px solid var(--error-color)'
+                  : '1px solid #d0cfcf',
+                borderLeft: formik.errors.photo ? 'none' : '1px solid #d0cfcf',
+              }}
+            >
+              {formik.values.photo
                 ? formik.values.photo.name
                 : 'Upload your photo'}
             </LabelSpan>
           </UploadLabel>
-        </div>
+          {formik.errors.photo ? (
+            <ErrorMessage>{formik.errors.photo}</ErrorMessage>
+          ) : null}
+        </PhotoWrapper>
         <FormButtonWrapper>
           <ButtonStuled
             type="submit"
-            disabled={!formik.values.photo.name || !formik.isValid}
+            disabled={!formik.values.photo?.name || !formik.isValid}
           >
             Sign up
           </ButtonStuled>
         </FormButtonWrapper>
-        {/* </FormWrapper> */}
-      </form>
+      </FormStyled>
     </>
   );
 };

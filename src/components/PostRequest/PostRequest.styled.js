@@ -1,15 +1,29 @@
 import styled from 'styled-components';
 
-// export const PostUserFormik = styled.form``;
-// export const FormWrapper = styled.div``;
-
+export const SuccessContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 140px;
+  padding-bottom: 100px;
+`;
+export const TitleSuccess = styled.h3`
+  font-size: var(--fz-title);
+  line-height: var(--ln-title);
+  margin-bottom: 50px;
+`;
+export const FormStyled = styled.form`
+  @media (width >= 768px) {
+    width: 380px;
+    margin: auto;
+  }
+`;
 export const ContainerUserInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
 `;
 export const FormInput = styled.input`
-  border: 1px solid #d0cfcf;
   height: 54px;
   padding: 14px 16px;
   background-color: var(--bg-color);
@@ -21,15 +35,18 @@ export const FormInput = styled.input`
 
 export const FormInputWrapper = styled.div`
   height: 72px;
+  @media (width >= 768px) {
+    width: 380px;
+  }
 `;
 export const PositionContainer = styled.div`
-  margin: 43px 0 47px;
+  margin: 25px 0 47px;
 `;
 export const UploadLabel = styled.label`
   display: flex;
   width: 100%;
 `;
-export const UploadButton = styled.p`
+export const UploadBox = styled.p`
   border: 1px solid var(--text-prim);
   height: 54px;
   width: 83px;
@@ -82,8 +99,8 @@ export const InputHidden = styled.input`
     fill: none;
   }
   &:checked + label svg {
-    fill: #00bdd3;
-    stroke: #00bdd3;
+    fill: var(--sec-color);
+    stroke: var(--sec-color);
   }
 `;
 export const ErrorMessage = styled.span`
@@ -91,7 +108,7 @@ export const ErrorMessage = styled.span`
   line-height: 1.166;
   display: inline-block;
   padding: 4px 0 0 16px;
-  color: #7e7e7e;
+  color: var(--error-color);
 `;
 
 export const ButtonStuled = styled.button`
@@ -103,10 +120,18 @@ export const ButtonStuled = styled.button`
   width: 100px;
   height: 34px;
   text-align: center;
+  &:is(:hover, :focus) {
+    background-color: ${props =>
+      props.disabled ? 'var(--disabled-color)' : 'var(--hover-color)'};
+  }
+`;
+
+export const PhotoWrapper = styled.div`
+  margin-bottom: 24px;
+  height: 72px;
 `;
 
 export const FormButtonWrapper = styled.div`
-  margin-top: 50px;
   width: 100%;
   display: flex;
   justify-content: center;

@@ -8,6 +8,14 @@ export const Container = styled.div`
   width: 360px;
   margin: auto;
   color: var(--text-prim);
+  @media (width >= 768px) {
+    padding: 0 32px;
+    width: 768px;
+  }
+  @media (width >= 1024px) {
+    padding: 0 60px;
+    width: 1024px;
+  }
 `;
 export const SectionTitle = styled.h2`
   font-size: var(--fz-title);

@@ -1,4 +1,5 @@
-import Button from '../Button/Button';
+import { smoothScrollTo } from '../../helpers/smoothScroll';
+import { LinkStyled } from '../Header/Header.styled';
 import { HeroSectionWrapper, HeroText, HeroTitle } from './HeroSection.styled';
 
 const HeroSection = () => {
@@ -13,7 +14,15 @@ const HeroSection = () => {
           mind. They should also be excited to learn, as the world of Front-End
           Development keeps evolving.
         </HeroText>
-        <Button text="Sign up" />
+        <LinkStyled
+          href="#Working with POST request"
+          onClick={e => {
+            e.preventDefault();
+            smoothScrollTo('Working with POST request');
+          }}
+        >
+          Sign up
+        </LinkStyled>
       </div>
     </HeroSectionWrapper>
   );
