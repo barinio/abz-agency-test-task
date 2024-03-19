@@ -14,7 +14,13 @@ export const PostRequest = ({ fetchFirstPage }) => {
       {isShow ? (
         <SuccessContainer>
           <TitleSuccess>User successfully registered</TitleSuccess>
-          <img src={successImage} alt="success" width={328} height={290} />
+          <img
+            src={successImage}
+            alt="success"
+            width={328}
+            height={290}
+            loading="lazy"
+          />
         </SuccessContainer>
       ) : (
         <Section title="Working with POST request">

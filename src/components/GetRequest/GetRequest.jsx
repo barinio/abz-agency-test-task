@@ -61,7 +61,13 @@ export const GetRequest = ({
             <UserList>
               {usersList.map(({ id, photo, name, position, email, phone }) => (
                 <Item key={id}>
-                  <Image src={photo} alt="userAvatar" width={70} height={70} />
+                  <Image
+                    src={photo}
+                    alt="userAvatar"
+                    width={70}
+                    height={70}
+                    loading="lazy"
+                  />
                   <LongText>{name}</LongText>
                   <UserInfo>
                     <LongText>{position}</LongText>
