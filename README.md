@@ -1,6 +1,6 @@
 # **_Test task abz-agency_**
 
-![test task](image.png)
+![test task](./assets/home.png)
 
 React, StyledComponents, Axios, Formik, Yup.
 
