@@ -146,7 +146,10 @@ const FormUser = ({ fetchFirstPage, setIsShow }) => {
               value={formik.values.phone}
               id="outlined-error"
               error={formik.touched.phone && Boolean(formik.errors.phone)}
-              helperText={formik.touched.phone && formik.errors.phone}
+              helperText={
+                (formik.touched.phone && formik.errors.phone) ||
+                '+38 (XXX) XXX - XX - XX'
+              }
             />
           </FormInputWrapper>
         </ContainerUserInfo>

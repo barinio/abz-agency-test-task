@@ -192,11 +192,14 @@ export const TextFieldStyled = styled(TextField)(({ error }) => ({
       color: error ? 'var(--error-color)' : 'var(--text-input)',
     },
   },
-  '.MuiFormHelperText-root.Mui-error': {
-    color: 'var(--error-color)',
+  '.MuiFormHelperText-root': {
+    color: 'var(--text-input)',
     margin: '4px 0 0 16px',
     fontFamily: ['Nunito', 'sans-serif'],
     fontSize: '12px',
     lineHeight: '1.16',
+  },
+  '.MuiFormHelperText-root.Mui-error': {
+    color: 'var(--error-color)',
   },
 }));
