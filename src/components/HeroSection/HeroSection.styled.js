@@ -33,6 +33,9 @@ export const HeroSectionWrapper = styled.section`
     display: flex;
     flex-direction: column;
     align-items: center;
+    @media (width < 360px) {
+      width: 315px;
+    }
     @media (width >= 768px) {
       padding: 0;
       width: 380px;

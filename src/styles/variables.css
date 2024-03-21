@@ -1,6 +1,7 @@
 :root {
 	--text-prim: rgba(0, 0, 0, 0.87);
 	--text-sec: rgba(255, 255, 255, 0.87);
+	--text-input: #7e7e7e;
 
 	--prim-color: #f4e041;
 	--hover-color: #ffe302;
@@ -8,6 +9,7 @@
 	--bg-color: #f8f8f8;
 	--disabled-color: #b4b4b4;
 	--error-color: #cb3d40;
+	--border-color: #d0cfcf;
 
 	--fz-title: 40px;
 	--fz-text: 16px;

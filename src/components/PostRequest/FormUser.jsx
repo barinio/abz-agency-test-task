@@ -7,7 +7,6 @@ import {
   ContainerUserInfo,
   ErrorMessage,
   FormButtonWrapper,
-  FormInput,
   FormInputWrapper,
   FormStyled,
   InputHidden,
@@ -16,6 +15,7 @@ import {
   PhotoWrapper,
   PositionContainer,
   RadioLabel,
+  TextFieldStyled,
   TitlePositionContainer,
   UploadBox,
   UploadLabel,
@@ -107,81 +107,47 @@ const FormUser = ({ fetchFirstPage, setIsShow }) => {
       <FormStyled onSubmit={formik.handleSubmit}>
         <ContainerUserInfo>
           <FormInputWrapper>
-            <FormInput
+            <TextFieldStyled
+              label="Name"
               type="text"
               name="name"
-              placeholder="Name"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.name}
               minLength={2}
               maxLength={60}
-              style={{
-                color:
-                  formik.touched.name && formik.errors.name
-                    ? 'var(--error-color)'
-                    : '#7E7E7E',
-                border:
-                  formik.touched.name && formik.errors.name
-                    ? '1px solid var(--error-color)'
-                    : '1px solid #d0cfcf',
-              }}
+              id="outlined-error"
+              error={formik.touched.name && Boolean(formik.errors.name)}
+              helperText={formik.touched.name && formik.errors.name}
             />
-            {formik.touched.name && formik.errors.name ? (
-              <ErrorMessage>{formik.errors.name}</ErrorMessage>
-            ) : null}
           </FormInputWrapper>
           <FormInputWrapper>
-            <FormInput
+            <TextFieldStyled
+              label="E-mail"
               type="text"
-              placeholder="E-mail"
               name="email"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
               minLength={2}
               maxLength={100}
-              style={{
-                color:
-                  formik.touched.email && formik.errors.email
-                    ? 'var(--error-color)'
-                    : '#7E7E7E',
-                border:
-                  formik.touched.email && formik.errors.email
-                    ? '1px solid var(--error-color)'
-                    : '1px solid #d0cfcf',
-              }}
+              id="outlined-error"
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
             />
-            {formik.touched.email && formik.errors.email ? (
-              <ErrorMessage>{formik.errors.email}</ErrorMessage>
-            ) : null}
           </FormInputWrapper>
           <FormInputWrapper>
-            <FormInput
+            <TextFieldStyled
+              label="Phone"
               type="text"
-              placeholder="Phone"
               name="phone"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.phone}
-              style={{
-                color:
-                  formik.touched.phone && formik.errors.phone
-                    ? 'var(--error-color)'
-                    : '#7E7E7E',
-                border:
-                  formik.touched.phone && formik.errors.phone
-                    ? '1px solid var(--error-color)'
-                    : '1px solid #d0cfcf',
-              }}
+              id="outlined-error"
+              error={formik.touched.phone && Boolean(formik.errors.phone)}
+              helperText={formik.touched.phone && formik.errors.phone}
             />
-            {formik.touched.phone && formik.errors.phone ? (
-              <ErrorMessage>{formik.errors.phone}</ErrorMessage>
-            ) : (
-              <ErrorMessage style={{ color: '#7E7E7E' }}>
-                +38 (XXX) XXX - XX - XX
-              </ErrorMessage>
-            )}
           </FormInputWrapper>
         </ContainerUserInfo>
 
@@ -206,9 +172,6 @@ const FormUser = ({ fetchFirstPage, setIsShow }) => {
                 </label>
               </RadioLabel>
             ))}
-            {formik.touched.position_id && formik.errors.position_id ? (
-              <ErrorMessage>{formik.errors.position_id}</ErrorMessage>
-            ) : null}
           </ListRadioLabel>
         </PositionContainer>
 
@@ -226,8 +189,8 @@ const FormUser = ({ fetchFirstPage, setIsShow }) => {
             <UploadBox
               style={{
                 border: formik.errors.photo
-                  ? '1px solid var(--error-color)'
-                  : '1px solid #d0cfcf',
+                  ? '2px solid var(--error-color)'
+                  : '1px solid var(--text-prim)',
               }}
             >
               Upload
@@ -235,7 +198,7 @@ const FormUser = ({ fetchFirstPage, setIsShow }) => {
             <LabelSpan
               style={{
                 border: formik.errors.photo
-                  ? '1px solid var(--error-color)'
+                  ? '2px solid var(--error-color)'
                   : '1px solid #d0cfcf',
                 borderLeft: formik.errors.photo ? 'none' : '1px solid #d0cfcf',
               }}

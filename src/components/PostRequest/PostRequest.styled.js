@@ -1,3 +1,4 @@
+import { TextField } from '@mui/material';
 import styled from 'styled-components';
 
 export const SuccessContainer = styled.div`
@@ -11,6 +12,10 @@ export const TitleSuccess = styled.h3`
   font-size: var(--fz-title);
   line-height: var(--ln-title);
   margin-bottom: 50px;
+  text-align: center;
+  @media (width < 360px) {
+    width: 300px;
+  }
 `;
 export const FormStyled = styled.form`
   @media (width >= 768px) {
@@ -107,7 +112,7 @@ export const ErrorMessage = styled.span`
   font-size: 12px;
   line-height: 1.166;
   display: inline-block;
-  padding: 4px 0 0 16px;
+  margin: 4px 0 0 16px;
   color: var(--error-color);
 `;
 
@@ -129,6 +134,8 @@ export const ButtonStuled = styled.button`
 export const PhotoWrapper = styled.div`
   margin-bottom: 24px;
   height: 72px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const FormButtonWrapper = styled.div`
@@ -137,3 +144,58 @@ export const FormButtonWrapper = styled.div`
   justify-content: center;
   padding-bottom: 100px;
 `;
+
+export const TextFieldStyled = styled(TextField)(({ error }) => ({
+  width: '100%',
+  '& .MuiInputBase-input': {
+    padding: '14px 16px',
+    fontSize: 'var(--fz-text)',
+    lineHeight: 'var(--ln-text)',
+    height: '26px',
+  },
+  '& label': {
+    color: 'var(--text-input)',
+    fontFamily: ['Nunito', 'sans-serif'],
+    fontSize: 'var(--fz-text)',
+    lineHeight: 'var(--ln-text)',
+
+    '&[data-shrink="true"]': {
+      color: error ? 'var(--error-color)' : 'var(--text-input)',
+      fontSize: '12px',
+    },
+    '&.Mui-focused': {
+      color: error ? 'var(--error-color)' : 'var(--text-input)',
+      fontSize: '12px',
+    },
+  },
+
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderWidth: error ? 2 : 1,
+      borderColor: error ? 'var(--error-color)' : 'var(--border-color)',
+      color: error ? 'var(--error-color)' : 'var(--text-input)',
+    },
+    '&:hover fieldset': {
+      borderWidth: error ? 2 : 1,
+      borderColor: error ? 'var(--error-color)' : 'var(--border-color)',
+      color: error ? 'var(--error-color)' : 'var(--text-input)',
+    },
+    '&.Mui-focused fieldset': {
+      borderWidth: error ? 2 : 1,
+      borderColor: error ? 'var(--error-color)' : 'var(--border-color)',
+      color: error ? 'var(--error-color)' : 'var(--text-input)',
+    },
+    '&.Mui-error fieldset': {
+      borderWidth: error ? 2 : 1,
+      borderColor: error ? 'var(--error-color)' : 'var(--border-color)',
+      color: error ? 'var(--error-color)' : 'var(--text-input)',
+    },
+  },
+  '.MuiFormHelperText-root.Mui-error': {
+    color: 'var(--error-color)',
+    margin: '4px 0 0 16px',
+    fontFamily: ['Nunito', 'sans-serif'],
+    fontSize: '12px',
+    lineHeight: '1.16',
+  },
+}));

@@ -10,6 +10,10 @@ export const HeaderStyled = styled.header`
     padding: 13px 16px;
     max-width: 1170px;
     margin: auto;
+    @media (width < 360px) {
+      gap: 5px;
+      padding: 13px;
+    }
     @media (width >= 768px) {
       padding: 13px 32px;
     }
@@ -36,6 +40,10 @@ export const LinkStyled = styled.a`
   text-align: center;
   &:is(:hover, :focus) {
     background-color: var(--hover-color);
+  }
+
+  @media (width < 360px) {
+    width: 70px;
   }
 `;
 export const NavStyled = styled.nav`

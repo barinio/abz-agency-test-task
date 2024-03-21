@@ -8,6 +8,9 @@ export const Container = styled.div`
   width: 360px;
   margin: auto;
   color: var(--text-prim);
+  @media (width < 360px) {
+    max-width: 315px;
+  }
   @media (width >= 768px) {
     padding: 0 32px;
     width: 768px;
