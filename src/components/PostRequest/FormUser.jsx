@@ -31,7 +31,7 @@ const emailRegExp =
 
 const MaxSise = 5242880;
 
-const FormUser = ({ fetchFirstPage, setIsShow }) => {
+const FormUser = ({ fetchFirstPage, setIsShow, setIsSuccess }) => {
   const validationSchema = Yup.object({
     name: Yup.string()
       .min(2, 'User name must be at least 2 characters')
@@ -83,10 +83,11 @@ const FormUser = ({ fetchFirstPage, setIsShow }) => {
       try {
         const newUser = await postUser(values);
         newUser && fetchFirstPage();
-        setIsShow(true);
       } catch (error) {
+        setIsSuccess(false);
         console.log('error:', error);
       } finally {
+        setIsShow(true);
         formik.resetForm();
       }
     },

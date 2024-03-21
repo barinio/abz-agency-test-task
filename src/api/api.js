@@ -36,18 +36,14 @@ export const getToken = async () => {
 };
 
 export const postUser = async newUser => {
-  try {
-    const formData = new FormData();
-    Object.keys(newUser).forEach(key => {
-      formData.append(key, newUser[key]);
-    });
-    const res = await instance.post('/api/v1/users', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return res;
-  } catch (e) {
-    console.log(e);
-  }
+  const formData = new FormData();
+  Object.keys(newUser).forEach(key => {
+    formData.append(key, newUser[key]);
+  });
+  const res = await instance.post('/api/v1/users', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return res;
 };

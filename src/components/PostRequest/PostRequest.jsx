@@ -6,14 +6,20 @@ import { SuccessContainer, TitleSuccess } from './PostRequest.styled';
 
 export const PostRequest = ({ fetchFirstPage }) => {
   const [isShow, setIsShow] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(true);
   setTimeout(() => {
     setIsShow(false);
+    setIsSuccess(true);
   }, 3000);
   return (
     <>
       {isShow ? (
         <SuccessContainer>
-          <TitleSuccess>User successfully registered</TitleSuccess>
+          <TitleSuccess>
+            {isSuccess
+              ? 'User successfully registered'
+              : 'A user with this number or email already exists'}
+          </TitleSuccess>
           <picture>
             <source
               media="(max-width: 360px)"
@@ -33,7 +39,11 @@ export const PostRequest = ({ fetchFirstPage }) => {
         </SuccessContainer>
       ) : (
         <Section title="Working with POST request">
-          <FormUser fetchFirstPage={fetchFirstPage} setIsShow={setIsShow} />
+          <FormUser
+            fetchFirstPage={fetchFirstPage}
+            setIsShow={setIsShow}
+            setIsSuccess={setIsSuccess}
+          />
         </Section>
       )}
     </>
