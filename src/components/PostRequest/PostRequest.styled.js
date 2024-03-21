@@ -151,6 +151,7 @@ export const TextFieldStyled = styled(TextField)(({ error }) => ({
     padding: '14px 16px',
     fontSize: 'var(--fz-text)',
     lineHeight: 'var(--ln-text)',
+    fontFamily: ['Nunito', 'sans-serif'],
     height: '26px',
   },
   '& label': {
