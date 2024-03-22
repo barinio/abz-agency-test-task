@@ -1,6 +1,7 @@
 import { useState } from 'react';
+
 import { styled } from '@mui/material/styles';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
 
 import {
   ButtonWrapper,
@@ -14,11 +15,16 @@ import {
   NoContent,
 } from './GetRequest.styled';
 
-import { Section } from '../Section/Section';
 import { instance } from '../../api/api';
+import { Section } from '../Section/Section';
 import Loader from '../Loader/loader';
+import { GetRequestProps } from '../../type';
 
-const DarkTooltip = styled(({ className, ...props }) => (
+interface DarkTooltipProps extends TooltipProps {
+  className?: string;
+}
+
+const DarkTooltip = styled(({ className, ...props }: DarkTooltipProps) => (
   <Tooltip
     {...props}
     classes={{ popper: className }}
@@ -39,7 +45,7 @@ export const GetRequest = ({
   setUsersList,
   nextPage,
   setNextPage,
-}) => {
+}: GetRequestProps) => {
   const [lastPage, setLastPage] = useState(2);
   const [currentPage, setCurrentPage] = useState(1);
 

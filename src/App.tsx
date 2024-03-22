@@ -1,14 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
+
 import Header from './components/Header/Header';
 import HeroSection from './components/HeroSection/HeroSection';
 import { GetRequest } from './components/GetRequest/GetRequest';
 import { PostRequest } from './components/PostRequest/PostRequest';
+
 import { getFirstUsers } from './api/api';
+import { User } from './type';
 
 function App() {
-  const [usersList, setUsersList] = useState([]);
+  const [usersList, setUsersList] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [nextPage, setNextPage] = useState(null);
+  const [nextPage, setNextPage] = useState('');
 
   const fetchFirstPage = useCallback(async () => {
     setIsLoading(true);
@@ -36,8 +39,8 @@ function App() {
         <GetRequest
           usersList={usersList}
           isLoading={isLoading}
-          setUsersList={setUsersList}
           nextPage={nextPage}
+          setUsersList={setUsersList}
           setNextPage={setNextPage}
         />
         <PostRequest fetchFirstPage={fetchFirstPage} />

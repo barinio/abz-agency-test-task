@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { ValidationError } from 'yup';
+
 import {
   ButtonStuled,
   ContainerUserInfo,
@@ -23,6 +25,7 @@ import {
 
 import icons from '../../images/icons.svg';
 import { getPositions, getToken, postUser } from '../../api/api';
+import { FormUserProps } from '../../type';
 
 const phoneRegExp = /^[+]{0,1}380([0-9]{9})$/;
 const emailRegExp =
@@ -31,7 +34,11 @@ const emailRegExp =
 
 const MaxSise = 5242880;
 
-const FormUser = ({ fetchFirstPage, setIsShow, setIsSuccess }) => {
+const FormUser = ({
+  fetchFirstPage,
+  setIsShow,
+  setIsSuccess,
+}: FormUserProps) => {
   const validationSchema = Yup.object({
     name: Yup.string()
       .min(2, 'User name must be at least 2 characters')
@@ -50,24 +57,40 @@ const FormUser = ({ fetchFirstPage, setIsShow, setIsSuccess }) => {
         'fileSize',
         'The photo size must not be greater than 5 Mb',
         value => {
-          return value && value.size <= MaxSise;
+          return value && (value as File).size <= MaxSise;
         }
       )
       .test('fileType', 'The photo format must be jpeg/jpg type', value => {
-        return value && ['image/jpeg', 'image/jpg'].includes(value.type);
+        return (
+          value && ['image/jpeg', 'image/jpg'].includes((value as File).type)
+        );
       })
-      .test('fileDimensions', 'Minimum size of photo 70x70px', async value => {
-        if (!value) return false;
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.src = URL.createObjectURL(value);
-          img.onload = () => {
-            URL.revokeObjectURL(img.src);
-            resolve(img.width >= 70 && img.height >= 70);
-          };
-          img.onerror = reject;
-        });
-      }),
+      .test(
+        'fileDimensions',
+        'Minimum size of photo 70x70px',
+        async (value: any) => {
+          if (!value) throw new ValidationError('Value is required');
+          return new Promise<boolean>((resolve, reject) => {
+            const img = new Image();
+            img.src = URL.createObjectURL(value);
+            img.onload = () => {
+              URL.revokeObjectURL(img.src);
+              if (img.width >= 70 && img.height >= 70) {
+                resolve(true);
+              } else {
+                reject(
+                  new ValidationError(
+                    'Photo dimensions must be at least 70x70px'
+                  )
+                );
+              }
+            };
+            img.onerror = () => {
+              reject(new ValidationError('Failed to load image'));
+            };
+          });
+        }
+      ),
   });
 
   const formik = useFormik({
@@ -76,7 +99,7 @@ const FormUser = ({ fetchFirstPage, setIsShow, setIsSuccess }) => {
       email: '',
       phone: '',
       position_id: 1,
-      photo: '',
+      photo: null as File | null,
     },
     validationSchema,
     onSubmit: async values => {
@@ -115,8 +138,7 @@ const FormUser = ({ fetchFirstPage, setIsShow, setIsSuccess }) => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.name}
-              minLength={2}
-              maxLength={60}
+              inputProps={{ minLength: 2, maxLength: 60 }}
               id="outlined-error"
               error={formik.touched.name && Boolean(formik.errors.name)}
               helperText={formik.touched.name && formik.errors.name}
@@ -130,8 +152,7 @@ const FormUser = ({ fetchFirstPage, setIsShow, setIsSuccess }) => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
-              minLength={2}
-              maxLength={100}
+              inputProps={{ minLength: 2, maxLength: 100 }}
               id="outlined-error"
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
@@ -186,7 +207,9 @@ const FormUser = ({ fetchFirstPage, setIsShow, setIsSuccess }) => {
               name="photo"
               type="file"
               onChange={event => {
-                formik.setFieldValue('photo', event.currentTarget.files[0]);
+                if (event.currentTarget.files) {
+                  formik.setFieldValue('photo', event.currentTarget.files[0]);
+                }
               }}
               accept="image/jpeg,image/jpg"
             />

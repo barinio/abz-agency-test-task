@@ -4,7 +4,7 @@ export const instance = axios.create({
   baseURL: 'https://frontend-test-assignment-api.abz.agency',
 });
 
-export const setToken = token => {
+export const setToken = (token: string) => {
   instance.defaults.headers.common['Token'] = token;
 };
 
@@ -35,7 +35,7 @@ export const getToken = async () => {
   }
 };
 
-export const postUser = async newUser => {
+export const postUser = async (newUser: any) => {
   const formData = new FormData();
   Object.keys(newUser).forEach(key => {
     formData.append(key, newUser[key]);

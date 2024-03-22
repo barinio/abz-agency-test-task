@@ -151,12 +151,12 @@ export const TextFieldStyled = styled(TextField)(({ error }) => ({
     padding: '14px 16px',
     fontSize: 'var(--fz-text)',
     lineHeight: 'var(--ln-text)',
-    fontFamily: ['Nunito', 'sans-serif'],
+    fontFamily: 'Nunito, sans-serif',
     height: '26px',
   },
   '& label': {
     color: 'var(--text-input)',
-    fontFamily: ['Nunito', 'sans-serif'],
+    fontFamily: 'Nunito, sans-serif',
     fontSize: 'var(--fz-text)',
     lineHeight: 'var(--ln-text)',
 
@@ -195,7 +195,7 @@ export const TextFieldStyled = styled(TextField)(({ error }) => ({
   '.MuiFormHelperText-root': {
     color: 'var(--text-input)',
     margin: '4px 0 0 16px',
-    fontFamily: ['Nunito', 'sans-serif'],
+    fontFamily: 'Nunito, sans-serif',
     fontSize: '12px',
     lineHeight: '1.16',
   },
