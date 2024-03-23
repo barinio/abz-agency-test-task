@@ -1,9 +1,10 @@
 import { ReactNode } from 'react';
 
 type User = {
-  id: string;
-  photo: string;
+  id?: string;
+  photo: File | null;
   name: string;
+  position_id: number;
   position: string;
   email: string;
   phone: string;

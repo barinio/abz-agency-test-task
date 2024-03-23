@@ -25,7 +25,7 @@ import {
 
 import icons from '../../images/icons.svg';
 import { getPositions, getToken, postUser } from '../../api/api';
-import { FormUserProps } from '../../type';
+import { FormUserProps, User } from '../../type';
 
 const phoneRegExp = /^[+]{0,1}380([0-9]{9})$/;
 const emailRegExp =
@@ -65,41 +65,37 @@ const FormUser = ({
           value && ['image/jpeg', 'image/jpg'].includes((value as File).type)
         );
       })
-      .test(
-        'fileDimensions',
-        'Minimum size of photo 70x70px',
-        async (value: any) => {
-          if (!value) throw new ValidationError('Value is required');
-          return new Promise<boolean>((resolve, reject) => {
-            const img = new Image();
-            img.src = URL.createObjectURL(value);
-            img.onload = () => {
-              URL.revokeObjectURL(img.src);
-              if (img.width >= 70 && img.height >= 70) {
-                resolve(true);
-              } else {
-                reject(
-                  new ValidationError(
-                    'Photo dimensions must be at least 70x70px'
-                  )
-                );
-              }
-            };
-            img.onerror = () => {
-              reject(new ValidationError('Failed to load image'));
-            };
-          });
-        }
-      ),
+      .test('fileDimensions', 'Minimum size of photo 70x70px', async value => {
+        if (!value) throw new ValidationError('Value is required');
+        return new Promise<boolean>((resolve, reject) => {
+          const img = new Image();
+          img.src = URL.createObjectURL(value as File);
+          img.onload = () => {
+            URL.revokeObjectURL(img.src);
+            if (img.width >= 70 && img.height >= 70) {
+              resolve(true);
+            } else {
+              reject(
+                new ValidationError('Photo dimensions must be at least 70x70px')
+              );
+            }
+          };
+          img.onerror = () => {
+            reject(new ValidationError('Failed to load image'));
+          };
+        });
+      }),
   });
 
-  const formik = useFormik({
+  const formik = useFormik<User>({
     initialValues: {
+      id: '',
       name: '',
       email: '',
       phone: '',
+      position: '',
       position_id: 1,
-      photo: null as File | null,
+      photo: null,
     },
     validationSchema,
     onSubmit: async values => {

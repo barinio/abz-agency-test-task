@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { User } from '../type';
 
 export const instance = axios.create({
   baseURL: 'https://frontend-test-assignment-api.abz.agency',
@@ -35,10 +36,16 @@ export const getToken = async () => {
   }
 };
 
-export const postUser = async (newUser: any) => {
+export const postUser = async (newUser: User) => {
   const formData = new FormData();
   Object.keys(newUser).forEach(key => {
-    formData.append(key, newUser[key]);
+    const userKey = key as keyof User;
+    const value = newUser[userKey];
+    if (value instanceof File || typeof value === 'string') {
+      formData.append(userKey, value);
+    } else if (value !== null && value !== undefined) {
+      formData.append(userKey, String(value));
+    }
   });
   const res = await instance.post('/api/v1/users', formData, {
     headers: {
